@@ -4,7 +4,6 @@ from django.test import TestCase, Client
 # Create your tests here.
 from .models import Portafolio
 import json
-import requests
 
 class PortafolioTestCase(TestCase):
     def test_list_portafolio_status(self):
@@ -65,5 +64,5 @@ class PortafolioTestCase(TestCase):
         response = self.client.post('/portafolio/updateUser/', json.dumps({"username": "testUser", "first_name": "TestUpdate", "last_name": "TestUpdate2"}),
                                     content_type='application/json')
         current_data = json.loads(response.content)
-        self.assertEqual(current_data[0]['fields']['first_name'],'TestUpdate')
-        self.assertEqual(current_data[0]['fields']['last_name'],'TestUpdate2')
+        self.assertEqual(current_data['first_name'],'TestUpdate')
+        self.assertEqual(current_data['last_name'],'TestUpdate2')
