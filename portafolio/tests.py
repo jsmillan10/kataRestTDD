@@ -3,8 +3,8 @@ from django.test import TestCase, Client
 
 # Create your tests here.
 from .models import Portafolio
-import requests
 import json
+import requests
 
 class PortafolioTestCase(TestCase):
     def test_list_portafolio_status(self):
@@ -26,5 +26,5 @@ class PortafolioTestCase(TestCase):
 
     def test_add_user(self):
         response=self.client.post('/portafolio/addUser/',json.dumps({"username": "testUser", "first_name": "Test", "last_name": "User", "password": "AnyPas#5", "email": "test@test.com"}), content_type='application/json')
-        current_data = json.loads(response.content)
+        current_data=json.loads(response.content)
         self.assertEqual(current_data[0]['fields']['username'],'testUser')
