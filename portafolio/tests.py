@@ -66,3 +66,15 @@ class PortafolioTestCase(TestCase):
         current_data = json.loads(response.content)
         self.assertEqual(current_data['first_name'],'TestUpdate')
         self.assertEqual(current_data['last_name'],'TestUpdate2')
+
+    def test_update_public_mark(self):
+        user_model = User.objects.create_user(username='test', password='kd8wke-DE34', first_name='test',
+                                              last_name='test', email='test@test.com')
+        Portafolio.objects.create(name='nuevo1', url='No', description='testImage', type='jpg', user=user_model)
+        Portafolio.objects.create(name='nuevo2', url='No', description='testImage', type='jpg', public=False, user=user_model)
+        Portafolio.objects.create(name='nuevo3', url='No', description='testImage', type='jpg', public=False, user=user_model)
+        response = self.client.post('/portafolio/updatePermission/', json.dumps([{"name":"nuevo1","public":False}]),
+                                    content_type='application/json')
+        current_data = json.loads(response.content)
+        self.assertEqual(current_data[0]['name'], 'nuevo1')
+        self.assertEqual(current_data[0]['public'], False)
