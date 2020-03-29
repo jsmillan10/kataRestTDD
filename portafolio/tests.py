@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
+from django.http import JsonResponse
 
 # Create your tests here.
 from .models import Portafolio
@@ -73,8 +74,11 @@ class PortafolioTestCase(TestCase):
         Portafolio.objects.create(name='nuevo1', url='No', description='testImage', type='jpg', user=user_model)
         Portafolio.objects.create(name='nuevo2', url='No', description='testImage', type='jpg', public=False, user=user_model)
         Portafolio.objects.create(name='nuevo3', url='No', description='testImage', type='jpg', public=False, user=user_model)
-        response = self.client.post('/portafolio/updatePermission/', json.dumps([{"name":"nuevo1","public":False}]),
-                                    content_type='application/json')
+        Portafolio.objects.create(name='nuevo4', url='No', description='testImage', type='jpg', public=False,
+                                  user=user_model)
+        response = self.client.post('/portafolio/updatePermission/', json.dumps([{"name":"nuevo1","public":False},{"name": "nuevo4", "public": True}]), content_type='application/json')
         current_data = json.loads(response.content)
         self.assertEqual(current_data[0]['name'], 'nuevo1')
         self.assertEqual(current_data[0]['public'], False)
+        self.assertEqual(current_data[1]['name'], 'nuevo4')
+        self.assertEqual(current_data[1]['public'], True)
