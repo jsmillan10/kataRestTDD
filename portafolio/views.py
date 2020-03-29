@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from .models import Portafolio
+from django.contrib.auth import authenticate, login, logout
 import json
 
 # Create your views here.
@@ -27,3 +28,17 @@ def add_user_view(request):
         user_model.email = email
         user_model.save()
     return HttpResponse(serializers.serialize("json", [user_model]))
+
+@csrf_exempt
+def login_view(request):
+    if request.method == 'POST':
+        jsonUser = json.loads(request.body)
+        username = jsonUser['username']
+        password = jsonUser['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            message = "Login Exitoso"
+        else:
+            message = 'Login Fallido'
+    return JsonResponse({"message": message})
