@@ -7,4 +7,5 @@ class Portafolio(models.Model):
     url = models.CharField(max_length=1000)
     description = models.CharField(max_length=1000, null=True)
     type = models.CharField(max_length=5, blank=True)
+    public = models.BooleanField(default=False)
     user = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
