@@ -6,6 +6,7 @@ from .models import Portafolio
 from django.contrib.auth import authenticate, login, logout
 import json
 
+
 # Create your views here.
 @csrf_exempt
 def index(request):
@@ -45,6 +46,7 @@ def login_view(request):
             message = 'Login Fallido'
     return JsonResponse({"message": message})
 
+
 @csrf_exempt
 def update_user(request):
     if request.method == 'POST':
@@ -54,6 +56,7 @@ def update_user(request):
         lastName = jsonUser['last_name']
         User.objects.filter(username=username).update(first_name=firstName, last_name=lastName)
     return JsonResponse({"first_name": firstName, 'last_name': lastName})
+
 
 @csrf_exempt
 def update_permission_user(request):
@@ -65,3 +68,20 @@ def update_permission_user(request):
             if paso == 1:
                 result.append(porta)
     return JsonResponse(result, safe=False)
+
+
+@csrf_exempt
+def add_portafolio(request):
+    if request.method == 'POST':
+        json_image = json.loads(request.body)
+        name = json_image['name']
+        url = json_image['url']
+        description = json_image['description']
+        tipo = json_image['type']
+        public = json_image['public']
+        username = json_image['username']
+        user_model = User.objects.get(username=username)
+        Portafolio.objects.create(name=name, url=url, description=description, type=tipo, public=public,
+                                  user=user_model)
+        images = Portafolio.objects.all()
+    return HttpResponse(serializers.serialize("json", images))
