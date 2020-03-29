@@ -57,3 +57,13 @@ class PortafolioTestCase(TestCase):
         response=self.client.post('/portafolio/login/',json.dumps({"username": "testUser", "password": "AnyPas#6"}), content_type='application/json')
         current_data=json.loads(response.content)
         self.assertEqual(current_data['message'],'Login Fallido')
+
+    def test_update_user(self):
+        self.client.post('/portafolio/addUser/', json.dumps(
+            {"username": "testUser", "first_name": "Test", "last_name": "User", "password": "AnyPas#5",
+             "email": "test@test.com"}), content_type='application/json')
+        response = self.client.post('/portafolio/updateUser/', json.dumps({"username": "testUser", "first_name": "TestUpdate", "last_name": "TestUpdate2"}),
+                                    content_type='application/json')
+        current_data = json.loads(response.content)
+        self.assertEqual(current_data[0]['fields']['first_name'],'TestUpdate')
+        self.assertEqual(current_data[0]['fields']['last_name'],'TestUpdate2')
