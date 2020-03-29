@@ -8,7 +8,7 @@ import json
 # Create your views here.
 @csrf_exempt
 def index(request):
-    images_list = Portafolio.objects.all()
+    images_list = Portafolio.objects.filter(public=True)
     return HttpResponse(serializers.serialize("json", images_list))
 
 @csrf_exempt
